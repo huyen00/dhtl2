@@ -1,0 +1,509 @@
+﻿<krpano version="1.20.6" title="Virtual Tour" logkey="false" showerrors="false">
+   
+<include url="action_html.xml" />
+
+	
+      <!-- <include url="plugins/showtext.xml" /> -->
+    <!-- <include url="plugins/polygonal_hotspots_editor.xml" if="calc(editor)" /> -->
+    <include url="plugins/dragg/dragg.xml"  />
+    <include url="option.xml" />
+    <include url="update.xml" />
+ <include url="skin/vtourskin.xml" />
+    <include url="plugins/popup_blur.xml" />
+    <include url="plugins/youtube_player.xml" />
+    <include url="plugins/showtext.xml" />
+          
+	<include url="add_hotspot/plugins_l/add_hotspot.xml" if="calc(editor)"/>
+    <include url="%FIRSTXML%/add_hotspot/plugins_l/plugin_a/poligon.xml" if="calc(editor)"/>
+	<include url="%FIRSTXML%/add_hotspot/plugins_l/plugin_a/vid_hs.xml" if="calc(editor)"/>
+	<include url="%FIRSTXML%/add_hotspot/plugins_l/plugin_a/sound_hs.xml" if="calc(editor)"/>
+	<include url="%FIRSTXML%/add_hotspot/plugins_l/plugin_a/photo.xml" if="calc(editor)"/>
+	<include url="%FIRSTXML%/add_hotspot/plugins_l/plugin_a/youtube.xml" if="calc(editor)"/>
+    <editor_hs pin="mihailov04@ya.ru" />
+	<include url="plugins/video_player.xml" />
+
+    <!-- <include url="index_skin.xml"/> -->
+    <!-- <include url="index_core.xml"/>
+    <include url="index_messages_en.xml"/> -->
+
+
+	
+	<!-- customize skin settings: maps, gyro, webvr, thumbnails, tooltips, layout, design, ... -->
+	<skin_settings
+       maps="true"
+       maps_type="google"
+       maps_bing_api_key=""
+       maps_google_api_key=""
+       maps_zoombuttons="false"
+       maps_loadonfirstuse="true"
+       gyro="true"
+       gyro_keeplookingdirection="false"
+       webvr="true"
+       webvr_keeplookingdirection="true"
+       webvr_prev_next_hotspots="true"
+       autotour="false"
+       littleplanetintro="false"
+       followmousecontrol="false"
+       title="true"
+       thumbs="true"
+       thumbs_width="120" thumbs_height="80" thumbs_padding="10" thumbs_crop="0|40|240|160"
+       thumbs_opened="false"
+       thumbs_text="false"
+       thumbs_dragging="true"
+       thumbs_onhoverscrolling="false"
+       thumbs_scrollbuttons="false"
+       thumbs_scrollindicator="false"
+       thumbs_loop="false"
+       tooltips_buttons="false"
+       tooltips_thumbs="false"
+       tooltips_hotspots="false"
+       tooltips_mapspots="false"
+       deeplinking="false"
+       loadscene_flags="MERGE"
+       loadscene_blend="OPENBLEND(0.5, 0.0, 0.75, 0.05, linear)"
+       loadscene_blend_prev="SLIDEBLEND(0.5, 180, 0.75, linear)"
+       loadscene_blend_next="SLIDEBLEND(0.5,   0, 0.75, linear)"
+       loadingtext="loading..."
+       layout_width="100%"
+       layout_maxwidth="814"
+       controlbar_width="-24"
+       controlbar_height="40"
+       controlbar_offset="20"
+       controlbar_offset_closed="-40"
+       controlbar_overlap.no-fractionalscaling="10"
+       controlbar_overlap.fractionalscaling="0"
+       design_skin_images="vtourskin.png"
+       design_bgcolor="0x2D3E50"
+       design_bgalpha="0.8"
+       design_bgborder="0"
+       design_bgroundedge="1"
+       design_bgshadow="0 4 10 0x000000 0.3"
+       design_thumbborder_bgborder="3 0xFFFFFF 1.0"
+       design_thumbborder_padding="2"
+       design_thumbborder_bgroundedge="0"
+       design_text_css="color:#FFFFFF; font-family:Arial;"
+       design_text_shadow="1"
+
+    />
+
+    <skin_settings
+		devices="mobile|tablet"
+	/>
+
+
+	<!--
+	    For an alternative skin design either change the <skin_settings> values
+	    from above or optionally include one of the predefined designs from below.
+	-->
+	<!-- <include url="skin/vtourskin_design_flat_light.xml"  /> -->
+	<!-- <include url="skin/vtourskin_design_glass.xml" /> -->
+	<!-- <include url="skin/vtourskin_design_ultra_light.xml" /> -->
+	<!-- <include url="skin/vtourskin_design_117.xml"         /> -->
+	<!-- <include url="skin/vtourskin_design_117round.xml"    /> -->
+	<!-- <include url="skin/vtourskin_design_black.xml"       /> -->
+
+
+	<!-- startup action - load the first scene -->
+	<action name="startup" autorun="onstart">
+    
+		if(startscene === null OR !scene[get(startscene)], copy(startscene,scene[0].name); );
+		loadscene(get(startscene), null, MERGE);
+		if(startactions !== null, startactions() );
+  
+         playsound(bgsound, assets/bgsound1.mp3, true, 0.8);
+		set(layer[mapfull].visible,false);
+		set( layer[map2].visible, false);
+        linkscene_title_xml("");  
+		<!-- showlog();
+  trace(xml.scene); -->
+       
+        <!-- if(device.panovideosupport == false, error('Sorry, but panoramic videos are not supported by your current browser!'); , loadscene(videopano); ); -->
+       
+		
+	</action>
+	<action name="active_option">
+		set(layer[%1].bgcolor, 0xDF7F2C);
+		set(atH,get(view.hlookat));
+		set(atV,get(view.vlookat));
+		loadscene("%2",null, MERGE);
+		lookat(get(atH),get(atV));
+	</action>
+    <action name="remove_active">
+		set(layer[%1].bgcolor, 0x1F3C22);
+	</action>
+		
+	
+    <action name= "showHotSpot">
+		showtext([img src=%1 height=120px width=220px][/img][p style="color="#FF00FF""]%2[/p],Target);
+	</action>
+
+
+	<scene name="scene_1" title="Cổng vào trường" onstart="" thumburl="panos/1.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="4.099" vlookat="3.468" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/1.tiles/preview.jpg" />
+
+		<image prealign="0|0.0|0">
+			<cube url="panos/1.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle_move" ath="4.722" atv="8.252" distorted="false" zoom="false" linkedscene="scene_2" />
+
+	</scene>
+
+	<scene name="scene_2" title="Trước tòa nhà A1" onstart="" thumburl="panos/2.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="0.000" vlookat="-2.320" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/2.tiles/preview.jpg" />
+
+		<image prealign="0|0.0|0">
+			<cube url="panos/2.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle_move" ath="0.614" atv="9.572" distorted="false" zoom="false" linkedscene="scene_4" />
+		<hotspot name="spot2" style="skin_hotspotstyle_move" ath="88.721" atv="6.066" distorted="false" zoom="false" linkedscene="scene_3" />
+		<hotspot name="spot3" style="skin_hotspotstyle_move" ath="179.832" atv="5.177" distorted="false" zoom="false" linkedscene="scene_1" />
+
+	</scene>
+
+	<scene name="scene_3" title="Tòa nhà A2" onstart="" thumburl="panos/3.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="-0.000" vlookat="-3.558" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/3.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/3.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle_move" ath="-88.399" atv="7.551" distorted="false" zoom="false" linkedscene="scene_27" />
+		<hotspot name="spot2" style="skin_hotspotstyle_move" ath="87.863" atv="8.259" distorted="false" zoom="false" linkedscene="scene_2" />
+		<hotspot name="spot3" style="skin_hotspotstyle_move" ath="-177.478" atv="8.314" distorted="false" zoom="false" linkedscene="scene_4" />
+		<hotspot name="spot4" style="skin_hotspotstyle_move" ath="-2.925" atv="2.279" distorted="false" zoom="false" linkedscene="scene_28" />
+
+	</scene>
+
+	<scene name="scene_4" title="Bên ngoài tòa A1" onstart="" thumburl="panos/4.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="1.081" vlookat="-9.578" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/4.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/4.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle_move" ath="3.313" atv="6.990" distorted="false" zoom="false" linkedscene="scene_6" />
+		<hotspot name="spot2" style="skin_hotspotstyle_move" ath="128.452" atv="12.029" distorted="false" zoom="false" linkedscene="scene_3" />
+		<hotspot name="spot3" style="skin_hotspotstyle_move" ath="-121.014" atv="17.157" distorted="false" zoom="false" linkedscene="scene_2" />
+
+	</scene>
+
+	<scene name="scene_6" title="Sảnh tòa A1" onstart="" thumburl="panos/6.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="-100.181" vlookat="-1.845" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/6.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/6.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle_move" ath="-91.514" atv="15.516" distorted="false" zoom="false" linkedscene="scene_7" />
+		<hotspot name="spot2" style="skin_hotspotstyle_move" ath="85.043" atv="18.563" distorted="false" zoom="false" linkedscene="scene_4" />
+
+	</scene>
+
+	<scene name="scene_7" title="Khu vực khuôn viên trường 1" onstart="" thumburl="panos/7.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="2.749" vlookat="-7.714" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/7.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/7.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle_move" ath="88.697" atv="5.308" distorted="false" zoom="false" linkedscene="scene_6" />
+		<hotspot name="spot2" style="skin_hotspotstyle_move" ath="-14.185" atv="4.774" distorted="false" zoom="false" linkedscene="scene_8" />
+		<hotspot name="spot3" style="skin_hotspotstyle_move" ath="-88.165" atv="4.730" distorted="false" zoom="false" linkedscene="scene_9" />
+
+	</scene>
+
+	<scene name="scene_8" title="Khu vực khuôn viên trường 1" onstart="" thumburl="panos/8.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="-354.424" vlookat="1.814" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/8.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/8.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle_move" ath="4.491" atv="5.212" distorted="false" zoom="false" linkedscene="scene_9" />
+		<hotspot name="spot2" style="skin_hotspotstyle_move" ath="-125.354" atv="9.792" distorted="false" zoom="false" linkedscene="scene_7" />
+		<hotspot name="spot3" style="skin_hotspotstyle_move" ath="132.425" atv="7.919" distorted="false" zoom="false" linkedscene="scene_27" />
+
+	</scene>
+
+	<scene name="scene_9" title="Trước tòa T45" onstart="" thumburl="panos/9.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="3.056" vlookat="-9.901" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/9.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/9.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle_move" ath="8.627" atv="2.864" distorted="false" zoom="false" linkedscene="scene_10" />
+		<hotspot name="spot2" style="skin_hotspotstyle_move" ath="67.763" atv="4.234" distorted="false" zoom="false" linkedscene="scene_11" />
+		<hotspot name="spot3" style="skin_hotspotstyle_move" ath="-168.143" atv="13.290" distorted="false" zoom="false" linkedscene="scene_13" />
+		<hotspot name="spot4" style="skin_hotspotstyle_move" ath="-84.249" atv="5.477" distorted="false" zoom="false" linkedscene="scene_8" />
+
+	</scene>
+
+	<scene name="scene_10" title="Sảnh T45" onstart="" thumburl="panos/10.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="3.131" vlookat="4.323" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/10.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/10.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle_move" ath="-86.339" atv="16.100" distorted="false" zoom="false" linkedscene="scene_9" />
+
+	</scene>
+
+	<scene name="scene_11" title="Tòa K1 - Thư Viện" onstart="" thumburl="panos/11.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="0.0" vlookat="0.0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/11.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/11.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle_move" ath="21.086" atv="-1.454" distorted="false" zoom="false" linkedscene="scene_16" />
+		<hotspot name="spot2" style="skin_hotspotstyle_move" ath="-119.888" atv="9.408" distorted="false" zoom="false" linkedscene="scene_12" />
+		<hotspot name="spot3" style="skin_hotspotstyle_move" ath="171.620" atv="7.942" distorted="false" zoom="false" linkedscene="scene_9" />
+		<hotspot name="spot4" style="skin_hotspotstyle_move" ath="83.051" atv="6.335" distorted="false" zoom="false" linkedscene="scene_13" />
+
+	</scene>
+
+	<scene name="scene_12" title="Thư Viện" onstart="" thumburl="panos/12.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="-2.630" vlookat="-2.630" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/12.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/12.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle_move" ath="-101.586" atv="3.984" distorted="false" zoom="false" linkedscene="scene_11" />
+
+	</scene>
+
+	<scene name="scene_13" title="Lối vào tòa nhà K1" onstart="" thumburl="panos/13.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="121.838" vlookat="-4.419" fovtype="MFOV" fov="102.386" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/13.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/13.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle_move" ath="80.498" atv="8.345" distorted="false" zoom="false" linkedscene="scene_11" />
+		<hotspot name="spot2" style="skin_hotspotstyle_move" ath="-8.385" atv="3.046" distorted="false" zoom="false" linkedscene="scene_3" />
+		<hotspot name="spot3" style="skin_hotspotstyle_move" ath="171.239" atv="8.330" distorted="false" zoom="false" linkedscene="scene_14" />
+
+	</scene>
+
+	<scene name="scene_14" title="Nhà Ăn của trường" onstart="" thumburl="panos/14.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="-10.981" vlookat="-25.056" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/14.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/14.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle_move" ath="-5.876" atv="1.239" distorted="false" zoom="false" linkedscene="scene_15" />
+		<hotspot name="spot2" style="skin_hotspotstyle_move" ath="-121.001" atv="7.377" distorted="false" zoom="false" linkedscene="scene_13" />
+		<hotspot name="spot3" style="skin_hotspotstyle_move" ath="125.846" atv="14.083" distorted="false" zoom="false" linkedscene="scene_18" />
+
+	</scene>
+
+	<scene name="scene_15" title="Bên trong nhà ăn 1" onstart="" thumburl="panos/15.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="0.0" vlookat="0.0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/15.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/15.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle_move" ath="-92.509" atv="16.172" distorted="false" zoom="false" linkedscene="scene_16" />
+
+	</scene>
+
+	<scene name="scene_16" title="Bên trong nhà ăn 2" onstart="" thumburl="panos/16.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="0.0" vlookat="0.0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/16.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/16.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle_move" ath="-66.090" atv="10.341" distorted="false" zoom="false" linkedscene="scene_14" />
+
+	</scene>
+
+	<scene name="scene_18" title="Tòa nhà C5" onstart="" thumburl="panos/18.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="-11.598" vlookat="-10.053" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/18.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/18.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle_move" ath="79.416" atv="5.532" distorted="false" zoom="false" linkedscene="scene_14" />
+		<hotspot name="spot2" style="skin_hotspotstyle_move" ath="-8.583" atv="8.105" distorted="false" zoom="false" linkedscene="scene_21" />
+		<hotspot name="spot3" style="skin_hotspotstyle_move" ath="-102.312" atv="2.847" distorted="false" zoom="false" linkedscene="scene_25" />
+
+	</scene>
+
+	<scene name="scene_19" title="Phòng Lab Sam Sung" onstart="" thumburl="panos/19.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="0.000" vlookat="0.000" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/19.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/19.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle_move" ath="23.025" atv="30.543" distorted="false" zoom="false" linkedscene="scene_20" />
+
+	</scene>
+
+	<scene name="scene_20" title="Lab Sam Sung 1" onstart="" thumburl="panos/20.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="162.432" vlookat="16.861" fovtype="MFOV" fov="127.950" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/20.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/20.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle_move" ath="112.239" atv="46.529" distorted="false" zoom="false" linkedscene="scene_19" />
+		<hotspot name="spot2" style="skin_hotspotstyle_move" ath="-110.489" atv="20.579" distorted="false" zoom="false" linkedscene="scene_21" />
+
+	</scene>
+
+	<scene name="scene_21" title="Sảnh C5" onstart="" thumburl="panos/21.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="-26.504" vlookat="11.280" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/21.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/21.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle_move" ath="89.597" atv="35.867" distorted="false" zoom="false" linkedscene="scene_18" />
+		<hotspot name="spot2" style="skin_hotspotstyle_move" ath="-6.371" atv="17.929" distorted="false" zoom="false" linkedscene="scene_20" />
+		<hotspot name="spot3" style="skin_hotspotstyle_move" ath="-169.630" atv="22.184" distorted="false" zoom="false" linkedscene="scene_22" />
+
+	</scene>
+
+	<scene name="scene_22" title="Phòng Thực Hành" onstart="" thumburl="panos/22.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="0.0" vlookat="0.0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/22.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/22.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle_move" ath="-66.652" atv="37.846" distorted="false" zoom="false" linkedscene="scene_21" />
+
+	</scene>
+
+	<scene name="scene_23" title="Bể Bơi" onstart="" thumburl="panos/23.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="0.0" vlookat="0.0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/23.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/23.tiles/pano_%s.jpg" />
+		</image>
+
+	</scene>
+
+	<scene name="scene_24" title="Bể Bơi 1" onstart="" thumburl="panos/24.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="0.0" vlookat="0.0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/24.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/24.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle_move" ath="78.388" atv="12.141" distorted="false" zoom="false" linkedscene="scene_18" />
+
+	</scene>
+
+	<scene name="scene_25" title="Sân Bóng" onstart="" thumburl="panos/25.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="3.405" vlookat="-0.619" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/25.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/25.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle_move" ath="-36.871" atv="-8.151" distorted="false" zoom="false" linkedscene="scene_18" />
+		<hotspot name="spot2" style="skin_hotspotstyle_move" ath="177.941" atv="3.118" distorted="false" zoom="false" linkedscene="scene_26" />
+
+	</scene>
+
+	<scene name="scene_26" title="Sân Bóng Rổ" onstart="" thumburl="panos/26.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="0.0" vlookat="0.0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/26.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/26.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle_move" ath="-119.606" atv="7.749" distorted="false" zoom="false" linkedscene="scene_25" />
+		<hotspot name="spot2" style="skin_hotspotstyle_move" ath="154.702" atv="7.318" distorted="false" zoom="false" linkedscene="scene_24" />
+
+	</scene>
+
+	<scene name="scene_27" title="Tòa B5" onstart="" thumburl="panos/27.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="-6.753" vlookat="-15.057" fovtype="MFOV" fov="120.000" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/27.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/27.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle_move" ath="-98.689" atv="7.853" distorted="false" zoom="false" linkedscene="scene_8" />
+
+	</scene>
+
+	<scene name="scene_28" title="Phòng Học" onstart="" thumburl="panos/28.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="134.161" vlookat="15.763" fovtype="MFOV" fov="127.868" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/28.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/28.tiles/pano_%s.jpg" />
+		</image>
+		<hotspot name="spot1" style="skin_hotspotstyle_move" ath="90.794" atv="17.170" distorted="false" zoom="false" linkedscene="scene_3" />
+
+	</scene>
+
+
+</krpano>
+
